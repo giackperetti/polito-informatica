@@ -1,32 +1,20 @@
-# Soluzione proposta tema d'esame 'discografia'
-from operator import itemgetter
-
-FILE_PRINCIPALE = 'artisti.txt'
-
-
 def leggi_artisti(nome_file):
     artisti = []
-    with open(nome_file, 'r', encoding='utf-8') as f:
-        for line in f:
-            campi = line.rstrip().split(';')
-            artisti.append({
-                'codice': campi[0],
-                'file': campi[1]
-            })
+    with open(nome_file, "r", encoding="utf-8") as file:
+        for line in file:
+            codice, file = line.rstrip().split(";")
+            artisti.append({"codice": codice, "file": f"./data/{file}"})
     return artisti
 
 
 def leggi_brani_artista(artista):
     brani = []
-    # leggi i dati dal file il cui nome è nel campo 'file' del record 'artista'
-    with open(artista['file'], 'r', encoding='utf-8') as f:
-        for line in f:
-            campi = line.rstrip().split(';')
-            brani.append({
-                'codice': artista['codice'],
-                'anno': int(campi[0]),
-                'brano': campi[1]
-            })
+    with open(artista["file"], "r", encoding="utf-8") as file:
+        for line in file:
+            anno, titolo = line.rstrip().split(";")
+            brani.append(
+                {"codice": artista["codice"], "anno": int(anno), "brano": titolo}
+            )
     return brani
 
 
@@ -34,23 +22,24 @@ def stampa_per_anni(brani):
     anno = 0
 
     for brano in brani:
-        if brano['anno'] != anno:  # se cambia anno, stampalo
-            anno = brano['anno']
-            print(f'Anno {anno}:')
+        if brano["anno"] != anno:
+            anno = brano["anno"]
+            print(f"Anno {anno}:")
         print(f'{brano["brano"]:30s}{brano["codice"]}')
 
 
 def main():
-    artisti = leggi_artisti(FILE_PRINCIPALE)
-    # print(artisti)
+    artisti = leggi_artisti("./data/artisti.txt")
     brani = []
+
     for artista in artisti:
         brani_artista = leggi_brani_artista(artista)
-        brani.extend(brani_artista)  # aggiunti tutti i brani dei vari artisti alla stessa lista
+        brani.extend(brani_artista)
 
-    brani.sort(key=itemgetter('anno'))
+    brani.sort(key=lambda brano: brano["anno"])
 
     stampa_per_anni(brani)
 
 
-main()
+if __name__ == "__main__":
+    main()
