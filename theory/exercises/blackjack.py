@@ -159,7 +159,7 @@ def gioca():
         )
     elif ha_vinto(carte_tavolo, carte_giocatore):
         if calcola_valore_mano(carte_giocatore) == 21 and len(carte_giocatore) == 2:
-            print(f"{BOLD}{GREEN}🎉 BLACKJACK! VINCI TU! 🎉{RESET}")
+            print(f"{BOLD}{GREEN}BLACKJACK! VINCI TU!{RESET}")
         else:
             print(f"{BOLD}{GREEN}Vinci tu!{RESET}")
         print(
