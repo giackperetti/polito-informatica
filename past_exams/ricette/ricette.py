@@ -1,54 +1,29 @@
-def leggi_file_ingredienti(nome_file: str) -> tuple[list[dict[str, float]], str]:
+def leggi_file_ingredienti(nome_file: str) -> list[dict[str, float]]:
     ingredienti: list[dict[str, float]] = []
-    procedimento = ""
     path = f"./data/{nome_file}.txt"
 
     try:
         with open(path, "r") as file:
-            line = file.readline()
-
-            while "Procedimento:" not in line and line != "":
+            for line in file:
                 stripped_line = line.strip()
 
                 if stripped_line == "Ingredienti:":
-                    pass
-                elif stripped_line:
-                    if ";" in stripped_line:
-                        try:
-                            nome, quantita_str = stripped_line.split(";", 1)
-                            ingredient = {nome.strip(): (float(quantita_str.strip()))}
-                            ingredienti.append(ingredient)
-                        except ValueError:
-                            print(
-                                f"Warning: Impossibile interpretare la quantità come numero decimale: {stripped_line}"
-                            )
-                        except IndexError:
-                            print(
-                                f"Warning: Riga ingrediente malformata (valore mancante): {stripped_line}"
-                            )
-                    else:
-                        print(
-                            f"Warning: Salto riga ingrediente malformata (nessun punto e virgola): {stripped_line}"
-                        )
-
-                line = file.readline()
-
-            while line != "":
-                stripped_line = line.strip()
-
-                if stripped_line and stripped_line != "Procedimento:":
-                    procedimento += stripped_line + " "
-
-                line = file.readline()
+                    continue
+                elif stripped_line.startswith("Procedimento:"):
+                    break
+                elif stripped_line and ";" in stripped_line:
+                    nome, quantita_str = stripped_line.split(";", 1)
+                    ingredient = {nome.strip(): float(quantita_str.strip())}
+                    ingredienti.append(ingredient)
 
     except FileNotFoundError:
         print(f"Errore: File non trovato in {path}")
-        return [], ""
+        return []
     except Exception as e:
         print(f"Si è verificato un errore imprevisto durante la lettura del file: {e}")
-        return [], ""
+        return []
 
-    return ingredienti, procedimento.strip()
+    return ingredienti 
 
 
 def leggi_file_informazioni() -> list[dict[str, float]]:
@@ -102,7 +77,7 @@ def calcola_costo_calorie(
 
 
 def main() -> None:
-    ingredienti, procedimento = leggi_file_ingredienti("polenta_concia")
+    ingredienti = leggi_file_ingredienti("polenta_concia")
     cibi = leggi_file_informazioni()
     costo, calorie = calcola_costo_calorie(ingredienti, cibi)
 
@@ -113,12 +88,6 @@ def main() -> None:
                 print(f"{ingredient} - {quantity:.3f} g")
     else:
         print("Nessun ingrediente o errore generico.")
-
-    print("\n--- Procedimento ---")
-    if procedimento:
-        print(procedimento)
-    else:
-        print("Nessun procedimento o errore generico.")
 
     print(f"\nNumero di ingredienti: {len(ingredienti)}")
     print(f"Costo totale della ricetta: {costo:.2f} €")
