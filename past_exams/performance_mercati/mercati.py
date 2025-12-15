@@ -1,5 +1,5 @@
 import csv
-import datetime
+from datetime import datetime
 from collections import defaultdict
 
 
@@ -17,7 +17,7 @@ def leggi_dati_aziende(filepath_aziende, filepath_storico):
             if simbolo in dati:
                 dati[simbolo]["storico"].append(
                     {
-                        "data": datetime.datetime.strptime(
+                        "data": datetime.strptime(
                             row["Date"], "%m/%d/%Y"
                         ).date(),
                         "close": float(row["Close"]),
