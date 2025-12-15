@@ -34,12 +34,16 @@ def leggi_dati(path_creature, path_incantesimi):
 
 def analisi_creature(dati_creature, dati_incantesimi):
     for creatura in dati_creature:
-        print(f"{creatura['nome']} ({creatura['tipo']}, potenza = {creatura['potenza']}):")
-        
+        print(
+            f"{creatura['nome']} ({creatura['tipo']}, potenza = {creatura['potenza']}):"
+        )
         for tipo in ["attacco", "difesa"]:
             print(f"  {tipo.capitalize()}:")
-            incantesimi = [i for i in dati_incantesimi 
-                     if i["id_creatura"] == creatura["id_creatura"] and i["tipo"] == tipo]
+            incantesimi = [
+                i
+                for i in dati_incantesimi
+                if i["id_creatura"] == creatura["id_creatura"] and i["tipo"] == tipo
+            ]
             if incantesimi:
                 for incantesimo in incantesimi:
                     print(f"    {incantesimo['nome']}: {incantesimo['potenza']}")
